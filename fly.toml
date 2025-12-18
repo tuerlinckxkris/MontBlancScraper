@@ -1,0 +1,27 @@
+# fly.toml app configuration file
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+
+app = "montblanc-scraper"
+primary_region = "iad"
+
+[build]
+
+[env]
+  # Environment variables will be set via fly secrets
+
+# This is a background worker, not a web service
+# We don't expose any HTTP ports
+[processes]
+  app = "python -u monitor_montblanc.py"
+
+[vm]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+# Keep the machine running constantly
+[[services]]
+  processes = ["app"]
+
+  # No internal port since we're not serving HTTP
+  # This section ensures the machine stays running
